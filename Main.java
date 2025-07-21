@@ -1,26 +1,61 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Main {
     public static void main(String[] args) {
-        // Reto para el desarrollador:
-        // 1. Implementar la clase 'Person' con atributos 'name' (String), 'age' (int) y 'hasDisability' (boolean).
-        // 2. Implementar la clase 'QueueManager' que gestione dos colas: 'priorityQueue' y 'regularQueue'.
-        // 3. El método 'addPerson' debe añadir personas a la cola correcta según su edad (>= 60) o si tiene discapacidad.
-        // 4. El método 'processQueue' debe atender primero a las personas en 'priorityQueue' y luego a las de 'regularQueue'.
-        // 5. Crear instancias de 'Person' y añadirlas a la cola usando 'QueueManager'.
-        // 6. Llamar a 'processQueue' para simular la atención.
-        // 7. Imprimir en consola el estado de cada persona al ser añadida y atendida.
-
-        // Pista: Usar las clases Queue y LinkedList de Java.
-
         System.out.println("Reto: Simulación de cola de atención prioritaria");
 
-        // Ejemplo de uso (a completar por el desarrollador):
-        // QueueManager queueManager = new QueueManager();
-        // queueManager.addPerson("Persona 1", 30, false);
-        // queueManager.addPerson("Adulto Mayor 1", 70, false);
-        // queueManager.processQueue();
+        Person person1 = new Person("Persona 1", 30, false);
+        Person person2 = new Person("Adulto Mayor 1", 70, false);
+        Person person3 = new Person("Adulto Mayor 2", 60, true);
+        Person person4 = new Person("Joven discapacitado", 25, true);
+
+        QueueManager queueManager = new QueueManager();
+        queueManager.addPerson(person1);
+        queueManager.addPerson(person2);
+        queueManager.addPerson(person3);
+        queueManager.addPerson(person4);
+        System.out.println();
+        queueManager.processQueue();
     }
 }
 
 // Implementar la clase Person aquí (reto)
+record Person(String name, int age, boolean hasDisability) {
+}
 
 // Implementar la clase QueueManager aquí (reto)
+class QueueManager {
+
+    public QueueManager() {
+        this.priorityQueue = new LinkedList<>();
+        this.regularQueue = new LinkedList<>();
+    }
+
+    private final Queue<Person> priorityQueue;
+    private final Queue<Person> regularQueue;
+
+
+    public void addPerson(Person person) {
+        if (person.age() >= 60 || person.hasDisability()) {
+            priorityQueue.offer(person);
+        } else {
+            regularQueue.offer(person);
+        }
+        System.out.println(person.name() + " acaba de ser agregado a la cola");
+    }
+
+    public void processQueue() {
+        Person person;
+        while (!priorityQueue.isEmpty()) {
+            person = priorityQueue.poll();
+            System.out.println(person.name() + " esta siendo atendido");
+        }
+
+        while (!regularQueue.isEmpty()) {
+            person = regularQueue.poll();
+            System.out.println(person.name() + " esta siendo atendido");
+        }
+        System.out.println("Ya no hay mas personas por atender");
+    }
+}
